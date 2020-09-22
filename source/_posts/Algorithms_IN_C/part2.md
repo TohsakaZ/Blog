@@ -78,6 +78,128 @@ link beg_link = (link)malloc(sizeof(node));
 * 递归的一些应用
   * 求公约数
   * 前缀表达式求值
-  * 分治法 （hanoi塔）
-  * 动态规划
-  *   
+
+* 分治法 （hanoi塔）
+  * hanoi 本质上会产生2^N - 1 的移动 ，由其递推公式可以得到(TN = 2 * TN-1  +1)
+  * 基于分治算法的范型包括如快速排序、归并排序、二分搜索等算法
+  * 分治算法揭示了一个非常基础的原理在于将问题分半（或者多个），将大问题分解为子问题进行求解
+
+##### 动态规划（本质也是将一个问题分解为多个子问题进行求解，但是不同之处在于分解的子问题可能存在重复）
+  * 以斐波那契数列数列和背包问题为例
+  * 动态规划关键在于分解子问题（找出递推关系 及 原问题和子问题之间的联系）以及 存储已求子问题的解防止重复求解
+  * 自底向上的动态规划（非低轨，循环外推）
+  * 自顶向上的动态规划（递归版本）
+	(斐波那契数列问题)
+```C
+// no recursion version
+int fibonaci1(int i)
+{
+  // f46 have the max value can be storaged by int
+  int F[46];
+  F[0] =1;
+  F[1] =1;
+  for (int i =2;i<=i;i++){
+    F[i] = F[i-1]+F[i-2];
+  }
+  return F[i];
+}
+
+// recursion version
+int known[46];
+memset(known,-1,sizeof(known));
+int fibnoci2(int i){
+    if (known[i]!=-1){
+      return known[i];
+    }
+    if (i==0 || i==1){
+      known[i] = 1;
+    }
+    else{
+      known[i] = fibnoci2(i-1) + fibnoci2(i-2);
+    }
+    return known[i];
+}
+```
+
+	背包问题
+```C
+struct item{
+  int  value;
+  int  size;
+};
+
+int N=100;
+item Item[N];
+
+int MaxKnown[Max_M];
+memset(Memset,-1,sizeof(MaxKnown));
+// recursive version
+int knap(int M){
+	if(MaxKnown[M]!=-1){
+		return MaxKnown[M];
+	}
+	MaxKnown[M]=0;
+	for (int i =0;i<N;i++){
+		if (M-Item[i].size > 0){
+			MaxKnown[M] = max(MaxKnown[M],knap(M-Item[i].size)+Item[i].value);
+		}
+	}
+
+	return MaxKnown[M];
+}
+
+// no recursive version
+int knap_no_recursive(int M){
+	int* MaxKnown = (int*)malloc(M*sizeof(int));
+	memset(MaxKnown,0,sizeof(MaxKnown));
+	for (int i =0;i<M;i++){
+		for (int j =0;j<N;j++){
+			int space = i+Item[j].size;
+			if ( space<=M ){
+				MaxKnown[space] = max(MaxKnown[space],MaxKnown[i]+Item[j].value);
+			}
+		}
+	}
+	return MaxKnown[M];
+	
+}
+```
+  * 这里 自顶向下的动态规划的优势在于 算法描述相对于解决问题十分自然，且可以自动确定待求解的子问题，个人觉得问题在于其一般采用递归实现，在解决较大递归深度情况下能力有限，如背包量十分大的背包问题，
+  * 自底向上的动态规划则采用循环实现，递归深度一般对于应数组存储，无函数调用开销，感觉能支持较大递归深度下的动态规划问题。
+
+##### 树
+* 基本概念
+  * 根节点、叶节点、二叉树
+  * 实现一般采用双向链表的方式表示
+  ```C
+  typedef node *link;
+  struct node{
+	  int value;
+	  link father;
+	  link left_child;
+	  link right_child;
+	  // or multi
+	  link[10] child_list;
+  }
+  ```
+  * 这里实现不采用类似前面的ADT的方式在于 树本身是用于实现其他高级ADT的基础
+  * 二叉树的数学性质：
+    * 具有N个内部节点的树具有N+1个的外部节点(外部节点是指不包含子节点的节点，剩余为内部节点)
+    * N个内部节点的二叉树有2N个连接（实际就等于总节点数-1）N-1个内部链接 N+1个外部链接
+    * N个内部节点的二叉树外部路径长度 比内部路径长度大2N （路径长度即为所有节点的层数之和，根节点为0层，层数最大值称为这颗树的高度）
+    * N个内部节点的二叉树高度至多为N-1（感觉是N 感觉书上漏算了最后的外部节点的高度） 至少为lgN(2为底) 
+  * 树的遍历
+    * 首先是三种遍历 前序 中序 后序 区分这三种顺序方式就是判断访问某个节点时候 本身节点与其子节点之间的访问顺序（其中前中后 分别表示本身节点的访问顺序）
+      * 前序 (本 左 右)
+      * 中序（左 中 右)
+      * 后序（左 右 中）
+    * 实现（同样可以基于递归与非递归的方式，其中非递归基于栈数据结构即可以实现）
+      * 非递归的实现（在实现中、后序的时候 需要考虑将本节点的子节点压入堆栈后 指向空
+	* 层序遍历（按层次进行节点的访问）
+    	* 实现 基于队列的数据结构即可
+	* 一些具体的应用：
+    	* 求树节点树、高度（递归很容易完成）
+    	* 中序 打印树的形状  前序 则遍历类似文件树或者目录树的结构
+
+##### 图的遍历
+	* 深度优先搜索
