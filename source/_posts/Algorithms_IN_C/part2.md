@@ -202,4 +202,73 @@ int knap_no_recursive(int M){
     	* 中序 打印树的形状  前序 则遍历类似文件树或者目录树的结构
 
 ##### 图的遍历
-	* 深度优先搜索
+* 深度优先搜索 （注意到与树的前序遍历等价）    
+* 基于递归实现(有两种版本 直接存节点  和存指向节点的指针（更省空间）)
+  * 这里基于栈实现的需要注意一个问题 ，如果要实现等价于递归深度优先搜索邻接表的结果，需要将邻接表中的节点反向压入栈中（即链表尾的节点先压入栈），同为了避免大量重复的点的问题，可以将栈的数目固定为节点数，因为越之前存储的点，大概率会被提前访问过。
+```C
+
+typedef node * link;
+struct node{
+    int v;
+    link next;
+};
+int N; // number of Points
+link a[N]; 
+int v[N]; //mark vist
+memset(visit,0,sizeof(visit));
+
+// recursion version
+void traverse(int k,void (*visit)(int))
+{
+    if (v[k] ){
+        return;
+    }
+    (*visit)(k);
+    v[k] = 0;
+    for (link j=a[k];j!=NULL;j=j->next){
+        traverse(j->v,visit);
+    }
+}
+
+// no recursion version (based on stack)
+void traverse2(int k,void(*visit)(int))
+{
+    stack<int> S;
+    S.push(k);
+    while (!S.empty()){
+        int t = S.top();
+        S.pop();
+        if (v[k]){
+            continue;
+        }
+        (*visit)(k);
+        v[k] = 1;
+        for (int j = a[k];j!=NULL;j=j->next){
+            S.push(j->v); 
+        }
+    }
+}
+
+
+```
+* 广度优先搜索( 类比于树中的层序遍历)
+* 实现 (基于队列的版本)
+
+```C
+void traverse_BFS(int k,void (*visit)(int)){
+    queue<int> Q;
+    Q.push(k);
+    while (!Q.empty()){
+        int t = Q.front();
+        Q.pop();
+        if (v[t]){
+            continue;
+        }
+        (*visit)(t);
+        v[t] = 1;
+        for (int j =a[t];j!=NULL;j=j->next){
+            Q.push(j->v);
+        }
+    }
+}
+```
