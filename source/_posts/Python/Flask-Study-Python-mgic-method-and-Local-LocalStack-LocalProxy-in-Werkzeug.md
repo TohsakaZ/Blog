@@ -10,10 +10,11 @@ categories:
 - CS
 ---
 
-## 起因
-本篇文章主要记录阅读Flask源码遇到的有关Local以及LocalProxy概念的问题的理解
-FLask源码记录如下(globals.py)：
+> 本篇文章主要记录阅读Flask源码遇到的有关Local以及LocalProxy概念的问题的理解 
+
 <!--more-->
+# 起因
+FLask源码记录如下(globals.py)：
 ```python
 from functools import partial
 from werkzeug.local import LocalProxy
@@ -47,11 +48,11 @@ def index():
 * 上述的全局变量在多线程/协程环境中，对于各自线程/协程来说，这些全局变量是互相独立互不影响
 因此本着学习Python语法的目的，想探究开头代码背后的实现原理
 
-## Python 继承、魔法方法
+# Python 继承、魔法方法
 
 首先，先看Werkzeug的local模块中的源代码，一共有三个比较重要的类：Local、LocalStack、LocalProxy
-首先看最基础的Local类，源代码如下:
 
+首先看最基础的Local类，源代码如下:
 ```python
 class Local(object):
     __slots__ = ('__storage__', '__ident_func__')
@@ -91,7 +92,7 @@ class Local(object):
             raise AttributeError(name)
 ```
 
-### Object类
+## Object类
 Object类，这个在python2中用于区分新式类和旧式类，即继承于Object类的为新式类，反之没有继承的为旧式类。新式类和旧式类的一大区别在于，object类声明了许多魔法属性和方法（magic method）这些方法非常有用，除此之外新式类和旧式类在多重继承上也有区别，具体可以搜索相关内容，这里主要说明下object类的概念。
 而在Python3中所有的类都是继承于object类的，不论是否显示声明继承于Object类
 可用下述代码测试是类是否继承了Object类的相关属性和方法
@@ -113,7 +114,7 @@ if __name__ == __main__:
 * 通过object类名直接调用函数的含义
 * __setattr__函数的含义
 
-### Python继承
+## Python继承
 对于上述的第一个问题，即是调用父类的相应同名方法，这在子类构造函数需要调用父类的构造函数中尤为常见，但是这应该是比较老的写法，对于Python3来说，推荐使用super的写法
 ```python
 class father():
@@ -138,7 +139,7 @@ class sonC(father):
 
 ```
 
-### Python魔法方法
+## Python魔法方法
 对于第二个问题，有关__setattr__函数的含义,这个是object类中定义的魔法方法，在某些特定情况下会调用这些函数，这里__setattr__即是在对象进行属性设定会调用该函数进行设定，具体的魔法方法可以参考下述链接：
 参考着篇文章[python magic method](https://rszalski.github.io/magicmethods/#appendix1)
 里面对python的各种魔法方法都进行了详细介绍
@@ -163,7 +164,7 @@ class sonC(father):
 可以看到，__setattr__方法中又调用了self.__storage__,在这里又会调用__setattr__的方法，陷入无限递归,因此这里必须调用原有的父类Object类中的设置属性的方法
 
 
-## Local类、LocalStack类、LocalProxy类
+# Local类、LocalStack类、LocalProxy类
 到这里，看懂这段Loal类的创建语法上已经没有问题了，接下来就是Local类的设计思路：
 Local目的是为了实现在多线程/协程环境下能够提供单线程/协程环境内的的使用的全局变量（同名），因此Local实际上是封装了各个线程内的同名变量，并用线程/协程的id来区分，在获取的时候通过获取当前线程/协程的id来获取对应的变量。
 其中可以看到storage即是Local类用于存储各个线程/协程变量的字典数据结构
