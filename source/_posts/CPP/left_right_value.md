@@ -12,13 +12,14 @@ tags:
 
 <!--more-->
 
-* 定义的引用变量本身并不是一个对象，因此无法定义引用的引用，但是这个在函数传参的时候怎么理解？
+* 定义的引用变量本身并不是一个对象，因此无法定义引用的引用，但是这个在函数传参的时候怎么理解？(通过引用传入的参数是看成对象？因为还是可以定义引用参数的引用)
 
 * 四种类型转换
   * static_cast<type>(expression) 常用于算术类型之间的强制转换。
   * dynamic_cast<type>(expression) 主要用于基类、子类之间的转换（运行时转换）
   * const_cast<type>(expression) 主要用于去掉const的强制转换
   * reinterpret_cast<type>(expression) 主要是在保证底层位模式不变的情况对对象进行重新解释,如char*和int*之间的转换
+
 
 * const 顶层、底层基本用法 以及C++11引入的constexpr的用法，其中 一个典型应用就是将string应用于swtich case中（正常switch 只能接收int 和 enum类型的常量表达式）
 ```CPP
@@ -63,7 +64,6 @@ programming that
 * supports data abstraction,
 * supports object-oriented programming, and
 * supports generic programming.
-
 
 
 
