@@ -2,7 +2,7 @@
 
 ### 研究现状
 
-Ge et.al 2008[[PDF](D:\work\GNSS\实时滤波轨道\Ge2008_Article_ResolutionOfGPSCarrier-phaseAm.pdf)]提出了星间单差(SD UPD)的方法 
+Ge et.al 2008[[PDF](D:\work\GNSS\实时滤波轨道\Ge2008_Article_ResolutionOfGPSCarrier-phaseAm.pdf)] ([HTML](https://readpaper.com/pdf-annotate/note?noteId=633555761535987712&pdfId=633555715819315200))提出了星间单差(SD UPD)的方法 
 
 核心思路 通过对星间单差模糊度的宽巷和窄巷模糊度的小数部分取均值，估计卫星端的UPD（这里UPD应该是指单差的把？）
 
