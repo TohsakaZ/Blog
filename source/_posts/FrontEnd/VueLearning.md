@@ -96,13 +96,16 @@ const routes = {
 // 也是后续的根组件
 const SimpleRouter = {
   // 这里定义了一个data的命名函数
-  data: () => ({
-    currentRoute: window.location.pathname
-  }),
+  data: () => (
+    return { currentRoute: window.location.pathname}
+),
   /** 这边是更常见的写法，使用了ES6中的对象 函数简洁定义的方式
   data () {
    currentRoute: window.location.pathname
  },
+ ************
+  data: fucntion () {
+  }
   **/
 
   // 这里使用了Vue的计算属性computed
