@@ -23,3 +23,10 @@ Javascript语法是一个用于修改浏览器HTML文档的客户端脚本语言
 > 在看Vue框架过程中经常会碰到一些语法问题，大部分都是属于ES6规范，这边单独记录一下
 >
 > ES6是在2015年发布的，因此ES2015就是指ES6
+
+## Node.js
+
+Node.js为一个用于Javascript运行在服务器端的JS引擎（类似于Python解释器）
+
+Npm为Js的包管理器（类似Python中的pip），是使用Node.js开发的工具
+
