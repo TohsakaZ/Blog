@@ -133,3 +133,10 @@ Ge et.al 2008[[PDF](D:\work\GNSS\实时滤波轨道\Ge2008_Article_ResolutionOfG
 
 然后计算MW值、WL值、NL值，判断模糊度能否参与固定
 
+
+
+### DD模糊度固定算法耗时
+
+主要集中在GetDdvalues时候计算MW得均值和方差部分
+
+以及在选取独立基线得时候进行得SVD独立性判断
