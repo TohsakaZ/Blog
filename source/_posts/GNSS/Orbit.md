@@ -49,7 +49,7 @@ A(t) =
 \frac{\partial{a}}{\partial{X}} & \frac{\partial{a}}{\partial{V}} & \frac{\partial{a}}{\partial{P}} \\
 \end{array} \right)
 $$
-待估的状态转移矩阵为
+待估改正量的状态转移矩阵为
 $$
 dX_{t}=\phi{(t,t_{0})}dX_{0}\\
 \phi{(t,t_{0})}=
